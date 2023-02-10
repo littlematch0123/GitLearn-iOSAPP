@@ -27,3 +27,4 @@ jobs:
           echo "Linting $file"
           proselint $file
         done
+
