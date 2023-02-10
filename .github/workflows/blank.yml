@@ -55,3 +55,9 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repo-token-user-login: 'github-actions[bot]' # The user.login for temporary GitHub tokens
           allow-repeats: false # This is the default
+      - name: Create a new issue
+        run: |
+          curl -X POST \
+          -H "Authorization: token ${{ secrets.github_token }}" \
+          -d '{"title":"New issue from Actions"}' \
+          https://api.github.com/repos/${{ github.repository }}/issues
