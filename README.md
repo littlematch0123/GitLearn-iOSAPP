@@ -1,2 +1,2 @@
 # Gitlearn-ios
-welcome to the world of IOS
+welcome to the world of iOS
