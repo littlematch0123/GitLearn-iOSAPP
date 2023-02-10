@@ -1,0 +1,29 @@
+name: Lint .md Files
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y nodejs
+        sudo apt-get install -y npm
+
+    - name: Install proselint
+      run: sudo npm install -g proselint
+
+    - name: Lint .md files
+      run: |
+        for file in $(find . -name "*.md"); do
+          echo "Linting $file"
+          proselint $file
+        done
