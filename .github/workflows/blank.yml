@@ -1,30 +1,57 @@
-name: Lint .md Files
+# This is a basic workflow to help you get started with Actions
 
+name: CI
+
+# Controls when the workflow will run
 on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
   pull_request:
-    branches: [main]
+    branches: [ "main" ]
 
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  lint:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
 
+    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y nodejs
-        sudo apt-get install -y npm
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo Hello, world!
 
-    - name: Install proselint
-      run: sudo npm install -g proselint
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
+          
 
-    - name: Lint .md files
-      run: |
-        for file in $(find . -name "*.md"); do
-          echo "Linting $file"
-          proselint $file
-        done
-
+      - name: write-good action step
+        id: write-good
+        uses: tomwhross/write-good-action@v1.5
+        # with:
+        #   directory: "manuscript" # Optional, uncomment to specify a directory to scan
+      # Use the output from the `write-good` step
+      - name: Get the write-good output
+        run: echo "${{ steps.write-good.outputs.result }}"
+      - name: Post comment
+        uses: mshick/add-pr-comment@v2
+        if: ${{ steps.write-good.outputs.result }}
+        with:
+          message: |
+            ${{ steps.write-good.outputs.result }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token-user-login: 'github-actions[bot]' # The user.login for temporary GitHub tokens
+          allow-repeats: false # This is the default
