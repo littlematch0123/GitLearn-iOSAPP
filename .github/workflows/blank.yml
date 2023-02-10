@@ -19,6 +19,8 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -45,7 +47,7 @@ jobs:
       - name: Get the write-good output
         run: echo "${{ steps.write-good.outputs.result }}"
       - name: Post comment
-        uses: mshick/add-pr-comment@v1
+        uses: mshick/add-pr-comment@v2
         if: ${{ steps.write-good.outputs.result }}
         with:
           message: |
